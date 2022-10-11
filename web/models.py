@@ -42,7 +42,7 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=500, null=True, blank=True)
     is_seller = models.BooleanField(default=False)
     birthdate = models.DateTimeField()
-    phone = models.CharField(max_length=20, validators=[phone_validator])
+    phone = models.CharField(max_length=20, validators=[phone_validator],unique=True)
 
     @property
     def is_staff(self):
