@@ -57,6 +57,10 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
 
+class Category(models.Model):
+    category = models.CharField(max_length=100)
+
+
 class Product(AbstractModel):
     name = models.CharField(max_length=500)
     description = models.TextField(null=True, blank=True)
@@ -64,10 +68,12 @@ class Product(AbstractModel):
     count = models.IntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
 
 
 class Order(AbstractModel):
-    status = models.CharField(max_length=15, choices=StatusEnum.choices,default=StatusEnum.in_warehouse)
+    status = models.CharField(max_length=15, choices=StatusEnum.choices,
+                              default=StatusEnum.in_warehouse)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     updated_at = None
