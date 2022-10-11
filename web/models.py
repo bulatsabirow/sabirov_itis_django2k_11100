@@ -41,7 +41,7 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     role = models.CharField(choices=Role.choices, max_length=15, default=Role.user)
     name = models.CharField(max_length=500, null=True, blank=True)
     is_seller = models.BooleanField(default=False)
-    birthdate = models.DateTimeField(verbose_name='Дата рождения')
+    birthdate = models.DateTimeField()
     phone = models.CharField(max_length=20, validators=[phone_validator])
 
     @property
@@ -62,11 +62,13 @@ class Product(AbstractModel):
     description = models.TextField(null=True, blank=True)
     photo = models.ImageField(null=True, blank=True)
     count = models.IntegerField()
-    price = models.DecimalField(decimal_places=2)
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-class Status(models.Model):
-    status = models.CharField(max_length=20, choices=StatusEnum.choices,
-                              default=StatusEnum.in_warehouse)
-
+class Order(AbstractModel):
+    status = models.CharField(max_length=15, choices=StatusEnum.choices,default=StatusEnum.in_warehouse)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = None
 
