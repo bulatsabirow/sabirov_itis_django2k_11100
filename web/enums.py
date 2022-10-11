@@ -7,6 +7,7 @@ class StatusEnum(models.TextChoices):
     delivery_point = 'delivery point', 'В пункте выдачи'
     delivered = 'delivered', 'Доставлен'
 
+
 class Role(models.TextChoices):
     admin = "admin", "Администратор"
     staff = "staff", "Сотрудник"

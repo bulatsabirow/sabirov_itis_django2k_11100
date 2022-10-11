@@ -1,12 +1,10 @@
-import re
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 from web.enums import StatusEnum, Role
+from web.validators import phone_validator
 
 
 # Create your models here.
@@ -35,6 +33,7 @@ class UserManager(DjangoUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         return self._create_user(email, password, role=Role.admin, **extra_fields)
 
+
 class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
@@ -43,7 +42,7 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=500, null=True, blank=True)
     is_seller = models.BooleanField(default=False)
     birthdate = models.DateTimeField(verbose_name='Дата рождения')
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, validators=[phone_validator])
 
     @property
     def is_staff(self):
