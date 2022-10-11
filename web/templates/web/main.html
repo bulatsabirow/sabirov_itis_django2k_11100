@@ -11,7 +11,7 @@
     <h1>Маркетплейс Oxygen</h1>
     <hr>
     {% for product in products %}
-        <p>{{ product.name }}</p>
+        <p><a href="{%  url 'product' product.id %}">{{ product.name }}</a></p>
     {% endfor %}
 </body>
 </html>
