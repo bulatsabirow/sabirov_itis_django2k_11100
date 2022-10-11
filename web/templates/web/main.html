@@ -10,6 +10,14 @@
 <body>
     <h1>Маркетплейс Oxygen</h1>
     <hr>
+    <form method="get">
+        <label>
+            Поиск нужного товара: <input type="text"
+                                         name="search"
+                                         placeholder="Найти..."
+                                         value="{{ search|default_if_none:'' }}">
+        </label>
+    </form>
     {% for product in products %}
         <p><a href="{%  url 'product' product.id %}">{{ product.name }}</a></p>
     {% endfor %}
