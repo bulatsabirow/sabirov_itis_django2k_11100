@@ -8,7 +8,11 @@
     <title>{{ product.name }}</title>
 </head>
 <body>
-<p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
+    <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
+    {% if user.is_authenticated %}
+        <p><a href="{% url 'products' %}?my_products=true">Вернуться к списку
+            своих товаров</a></p>
+    {% endif %}
     <h1>{{ product.name }}</h1>
     <p><small>ID товара: {{ product.id }}</small></p>
     {% if product.count <= 0 %}

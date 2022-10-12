@@ -13,6 +13,13 @@
     {% if user.is_authenticated %}
         <b>Добро пожаловать, {{ user.name }}!</b>
         <a href="{% url 'add' %}">Добавить товар</a>
+        <form method="get">
+            <label>
+                <u>Показать мои товары</u>
+                <input name="my_products" value='true' type="submit" hidden>
+            </label>
+        </form>
+        <a href="{% url 'logout' %}">Выйти</a>
     {% else %}
         <a href="{% url 'register' %}">Регистрация</a> |
         <a href="{% url 'auth' %}">Авторизация</a>

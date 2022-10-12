@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -11,11 +12,14 @@ from web.models import Product, User
 
 def products_page(request):
     search = request.GET.get('search', None)
+    my_products = request.GET.get('my_products', None)
     if search is None:
         products = Product.objects.all()
     else:
         products = Product.objects.filter(Q(name__icontains=search) |
                                           Q(description__icontains=search))
+    if my_products and request.user.is_authenticated:
+        products = products.filter(user=request.user)
     products = products.order_by('-created_at')
     return render(request, 'web/main.html', {
         'products': products,
@@ -62,7 +66,7 @@ def authorization_view(request):
         'message': message,
     })
 
-
+@login_required
 def add_product_view(request):
     form = ProductForm()
     if request.method == 'POST':
@@ -74,4 +78,8 @@ def add_product_view(request):
         'form': form,
     })
 
+
+def logout_view(request):
+    logout(request)
+    return redirect('products')
 
