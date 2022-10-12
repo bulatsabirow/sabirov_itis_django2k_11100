@@ -10,9 +10,15 @@
 <body>
 <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
     <h1>{{ product.name }}</h1>
-    <p>{{ product.description }}</p>
+    <p><small>ID товара: {{ product.id }}</small></p>
+    {% if product.count <= 0 %}
+        <p><b>Товар отсутствует в продаже</b></p>
+    {% else %}
+        <p>Цена: {{ product.price }}</p>
+    {% endif %}
+    <p>Описание: <br><br>{{ product.description }}</p>
     <p>
-        Время создания: {{ product.created_at|date:'d.m.Y' }}
+        <small>Время создания: {{ product.created_at|date:'d.m.Y' }}</small>
     </p>
 </body>
 </html>

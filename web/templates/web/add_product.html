@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1>Добавление товара</h1>
+    <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}

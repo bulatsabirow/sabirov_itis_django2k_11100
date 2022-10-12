@@ -39,7 +39,7 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     role = models.CharField(choices=Role.choices, max_length=15, default=Role.user)
     name = models.CharField(max_length=500, null=True, blank=True)
-    birthdate = models.DateTimeField()
+    birthdate = models.DateField()
     phone = models.CharField(max_length=20)
 
     @property
