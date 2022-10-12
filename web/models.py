@@ -59,6 +59,14 @@ class Category(models.Model):
     category = models.CharField(max_length=100)
 
 
+class PickupPoint(models.Model):
+    address = models.CharField(max_length=500)
+    locality = models.CharField(max_length=500)
+
+    class Meta:
+        unique_together = ('address', 'locality',)
+
+
 class Product(AbstractModel):
     name = models.CharField(max_length=500)
     description = models.TextField(null=True, blank=True)
@@ -74,6 +82,6 @@ class Order(AbstractModel):
                               default=StatusEnum.in_warehouse)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pickup_point = models.ForeignKey(PickupPoint, on_delete=models.SET_NULL,
+                                     null=True)
     updated_at = None
-
-
