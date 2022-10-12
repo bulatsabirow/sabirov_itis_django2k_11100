@@ -39,9 +39,8 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     role = models.CharField(choices=Role.choices, max_length=15, default=Role.user)
     name = models.CharField(max_length=500, null=True, blank=True)
-    is_seller = models.BooleanField(default=False)
     birthdate = models.DateTimeField()
-    phone = models.CharField(max_length=20, unique=True)
+    phone = models.CharField(max_length=20)
 
     @property
     def is_staff(self):
@@ -60,18 +59,13 @@ class Category(models.Model):
     category = models.CharField(max_length=100)
 
 
-class Seller(models.Model):
-    title = models.CharField(max_length=100)
-    users = models.ManyToManyField(User)
-
-
 class Product(AbstractModel):
     name = models.CharField(max_length=500)
     description = models.TextField(null=True, blank=True)
     photo = models.ImageField(null=True, blank=True)
     count = models.IntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
 
 

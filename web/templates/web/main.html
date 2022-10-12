@@ -10,6 +10,12 @@
 <body>
     <h1>Маркетплейс Oxygen</h1>
     <hr>
+    {% if user.is_authenticated %}
+        <b>Добро пожаловать, {{ user.name }}!</b>
+    {% else %}
+        <a href="{% url 'register' %}">Регистрация</a> |
+        <a href="{% url 'auth' %}">Авторизация</a>
+    {% endif %}
     <form method="get">
         <label>
             Поиск нужного товара: <input type="text"

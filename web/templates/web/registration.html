@@ -10,10 +10,18 @@
 <body>
     <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
     <h1>Регистрация</h1>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button>Зарегистрироваться</button>
-    </form>
+    {% if form.errors %}
+        <b>Пожалуйста, исправьте следующие ошибки:</b>
+        {{ form.errors }}
+    {% endif %}
+    {% if is_registered %}
+        <b>Вы успешно зарегистрировались!</b>
+    {% else %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button>Зарегистрироваться</button>
+        </form>
+    {% endif %}
 </body>
 </html>
