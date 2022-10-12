@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 
 from web.models import Product
@@ -12,7 +14,7 @@ class AuthorizationForm(forms.Form):
 class RegisterForm(AuthorizationForm):
     name = forms.CharField()
     phone = forms.CharField(validators=[phone_validator])
-    birthdate = forms.DateField(widget=forms.SelectDateWidget())
+    birthdate = forms.DateField(widget=forms.SelectDateWidget(years=range(1900, date.today().year+1)))
 
 
 class ProductForm(forms.ModelForm):
@@ -22,14 +24,17 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ('name', 'description', 'photo', 'price')
+        fields = ('name', 'description', 'photo', 'price', 'count')
         labels = {'name': 'Название товара',
                   'description': 'Описание',
                   'photo': 'Изображение',
                   'price': 'Цена',
+                  'count': 'Количество',
                   }
         widgets = {
             'price': forms.NumberInput(),
+            'photo': forms.FileInput(),
+            'count': forms.NumberInput(),
         }
 
 

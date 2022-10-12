@@ -10,7 +10,9 @@
 <body>
     <h1>Добавление товара</h1>
     <form action="" method="post">
+        {% csrf_token %}
         {{ form.as_p }}
+        <button>Добавить товар</button>
     </form>
 </body>
 </html>

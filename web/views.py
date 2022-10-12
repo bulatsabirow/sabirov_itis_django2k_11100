@@ -66,9 +66,10 @@ def authorization_view(request):
 def add_product_view(request):
     form = ProductForm()
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, initial={'user': request.user})
         if form.is_valid():
-            pass
+            product = form.save()
+            return redirect('product', product.id)
     return render(request, 'web/add_product.html', {
         'form': form,
     })
