@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import DeleteView, ListView, DetailView
+from django.views.generic import DeleteView, ListView, DetailView, UpdateView
 
 from oxygen import settings
 from web.forms import RegisterForm, AuthorizationForm, ProductForm
@@ -152,7 +152,17 @@ class ProductMixin:
         return reverse('product', args=(self.object.id,))
 
 
-class ProductDeleteView(ProductMixin, DeleteView):
+class ProductUpdateView(ProductMixin, UpdateView, LoginRequiredMixin):
+    form_class = ProductForm
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            'id': self.kwargs[self.slug_url_kwarg],
+        }
+
+
+class ProductDeleteView(ProductMixin, DeleteView, LoginRequiredMixin):
     template_name = 'web/delete_product.html'
 
     def get_success_url(self):
@@ -160,5 +170,3 @@ class ProductDeleteView(ProductMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         return {'product': Product.objects.filter(id=self.object.id)}
-
-

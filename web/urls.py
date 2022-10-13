@@ -3,7 +3,7 @@ from django.urls import path
 from django.views.generic import RedirectView
 
 from web.views import registration_view, authorization_view, add_product_view, logout_view, \
-    ProductDeleteView, ProductListView, ProductDetailView, ProductUserListView
+    ProductDeleteView, ProductListView, ProductDetailView, ProductUserListView, ProductUpdateView
 
 urlpatterns = [
     path('',  RedirectView.as_view(pattern_name='products'), name='main'),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('products/my/', ProductUserListView.as_view(), name='my'),
     path('logout/', logout_view, name='logout'),
     path('add_product/', add_product_view, name='add'),
+    path('edit_product/<int:id>',  ProductUpdateView.as_view(), name='edit'),
     path('delete_product/<int:id>', ProductDeleteView.as_view(), name='delete'),
 ]

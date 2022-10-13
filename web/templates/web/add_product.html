@@ -5,15 +5,15 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Добавление товара</title>
+    <title>{% if id %}Редактирование{% else %}Добавление{% endif %} товара</title>
 </head>
 <body>
-    <h1>Добавление товара</h1>
+    <h1>{% if id %}Редактирование{% else %}Добавление{% endif %} товара</h1>
     <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button>Добавить товар</button>
+        <button>{% if id %}Редактировать{% else %}Добавить{% endif %} товар</button>
     </form>
 </body>
 </html>
