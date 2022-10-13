@@ -3,7 +3,7 @@ from django.contrib.auth.models import PermissionsMixin, AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.db import models
 
-from web.enums import StatusEnum, Role
+from web.enums import StatusEnum, Role, Category
 
 
 # Create your models here.
@@ -55,10 +55,6 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
 
-class Category(models.Model):
-    category = models.CharField(max_length=100)
-
-
 class PickupPoint(models.Model):
     address = models.CharField(max_length=500)
     locality = models.CharField(max_length=500)
@@ -74,7 +70,7 @@ class Product(AbstractModel):
     count = models.IntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.CharField(null=True, max_length=100, choices=Category.choices)
 
 
 class Order(AbstractModel):

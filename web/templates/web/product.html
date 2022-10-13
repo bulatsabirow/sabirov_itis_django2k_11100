@@ -9,12 +9,13 @@
 </head>
 <body>
     <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
-    {% if is_owner %}
-        <p><a href="{% url 'products' %}?my_products=true">Вернуться к списку
-            своих товаров</a></p>
+    {% if product.user.id == user.id %}
+{#        <p><a href="{% url 'products' %}?my_products=true">Вернуться к списку#}
+{#            своих товаров</a></p>#}
         <p><a href="{% url 'delete' product.id %}">Удалить товар</a></p>
     {% endif %}
     <h1>{{ product.name }}</h1>
+    <h2>Продавец: {{ product.user.name }}</h2>
     <p><small>ID товара: {{ product.id }}</small></p>
     {% if not product.photo %}
         <p><b>Нет фото</b></p>
@@ -27,9 +28,7 @@
     {% endif %}
     <p>Описание: <br><br>{{ product.description }}<br></p>
     <p>Категория:
-        {% if product.category %}
-            {{ product.category|default_if_none:'Нет категории' }}
-        {% endif %}
+        {{ product.category|default_if_none:'Нет категории' }}
     </p>
     <p>
         <small>Время создания: {{ product.created_at|date:'d.m.Y' }}</small>

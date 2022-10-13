@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, ListView, DetailView
 
 from web.forms import RegisterForm, AuthorizationForm, ProductForm
 from web.models import Product, User
@@ -11,33 +11,59 @@ from web.models import Product, User
 
 # Create your views here.
 
+class ProductListView(ListView):
+    template_name = 'web/main.html'
+    context_object_name = 'products'
 
-def products_page(request):
-    search = request.GET.get('search', None)
-    my_products = request.GET.get('my_products', None)
-    if search is None:
-        products = Product.objects.all()
-    else:
-        products = Product.objects.filter(Q(name__icontains=search) |
-                                          Q(description__icontains=search))
-    if my_products and request.user.is_authenticated:
-        products = products.filter(user=request.user)
-    products = products.order_by('-created_at')
-    return render(request, 'web/main.html', {
-        'products': products,
-        'search': search,
-    })
+    def get_queryset(self):
+        return self.filter_queryset(Product.objects.all())
+
+    def filter_queryset(self, products):
+        self.search = self.request.GET.get('search', None)
+        if self.search is not None:
+            products = products.filter(Q(name__icontains=self.search) |
+                                       Q(description__icontains=self.search))
+        products = products.order_by('-created_at')
+        return products
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        return {
+            **super().get_context_data(),
+            'search': self.search
+        }
 
 
-def product_view(request, id):
-    product = get_object_or_404(Product, id=id)
-    is_owner = False
-    if product in Product.objects.filter(user=request.user):
-        is_owner = True
-    return render(request, 'web/product.html', {
-        'product': product,
-        'is_owner': is_owner,
-    })
+# def products_page(request):
+#     search = request.GET.get('search', None)
+#     if search is None:
+#         products = Product.objects.all()
+#     else:
+#         products = Product.objects.filter(Q(name__icontains=search) |
+#                                           Q(description__icontains=search))
+#     products = products.order_by('-created_at')
+#     return render(request, 'web/main.html', {
+#         'products': products,
+#         'search': search,
+#     })
+class ProductDetailView(DetailView):
+    template_name = 'web/product.html'
+    slug_url_kwarg = 'id'
+    slug_field = 'id'
+    model = Product
+
+
+
+# def product_view(request, id):
+#     product = get_object_or_404(Product, id=id)
+#     seller = User.objects.filter(id=product.user.id)[0].name
+#     is_owner = False
+#     if product in Product.objects.filter(user=request.user):
+#         is_owner = True
+#     return render(request, 'web/product.html', {
+#         'product': product,
+#         'is_owner': is_owner,
+#         'seller': seller,
+#     })
 
 
 def registration_view(request):
@@ -46,8 +72,9 @@ def registration_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            User.objects.create_user(**form.cleaned_data)
+            user = User.objects.create_user(**form.cleaned_data)
             is_registered = True
+            login(request, user)
     return render(request, 'web/registration.html', {
         'form': form,
         'is_registered': is_registered,

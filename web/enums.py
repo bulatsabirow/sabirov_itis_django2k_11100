@@ -14,3 +14,9 @@ class Role(models.TextChoices):
     user = "user", 'Пользователь'
 
 
+class Category(models.TextChoices):
+    electronics = 'electronics', 'электроника'
+    books = 'books', 'книги'
+
+
+
