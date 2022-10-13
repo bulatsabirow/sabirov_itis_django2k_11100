@@ -12,7 +12,7 @@
     <hr>
     {% if user.is_authenticated %}
         <b>Добро пожаловать, {{ user.name }}!</b>
-        <a href="{% url 'add' %}">Добавить товар</a>
+        <a href="{% url 'my' %}">Перейти в личную страницу</a>
 {#        <form method="get">#}
 {#            <label>#}
 {#                <u>Показать мои товары</u>#}

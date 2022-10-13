@@ -33,6 +33,13 @@ class ProductListView(ListView):
         }
 
 
+class ProductUserListView(ProductListView):
+    template_name = 'web/my.html'
+
+    def get_queryset(self):
+        return self.filter_queryset(Product.objects.filter(user=self.request.user))
+
+
 # def products_page(request):
 #     search = request.GET.get('search', None)
 #     if search is None:
@@ -45,12 +52,13 @@ class ProductListView(ListView):
 #         'products': products,
 #         'search': search,
 #     })
+
+
 class ProductDetailView(DetailView):
     template_name = 'web/product.html'
     slug_url_kwarg = 'id'
     slug_field = 'id'
     model = Product
-
 
 
 # def product_view(request, id):
@@ -64,7 +72,6 @@ class ProductDetailView(DetailView):
 #         'is_owner': is_owner,
 #         'seller': seller,
 #     })
-
 
 def registration_view(request):
     form = RegisterForm()
@@ -92,7 +99,10 @@ def authorization_view(request):
                 message = 'Введённые данные неверны!'
             else:
                 login(request, user)
-                return redirect('products')
+                next_url = 'products'
+                if 'next' in request.GET:
+                    next_url = request.GET.get('next')
+                return redirect(next_url)
 
     return render(request, 'web/authorization.html', {
         'form': form,
