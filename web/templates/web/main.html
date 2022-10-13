@@ -33,7 +33,12 @@
         </label>
     </form>
     {% for product in products %}
-        <p><a href="{%  url 'product' product.id %}">{{ product.name }}</a></p>
+        <p><a href="{%  url 'product' product.id %}">
+            {{ product.name }}
+        </a></p>
+        <p>
+            <small>Цена: {{ product.price }}</small>
+        </p>
     {% endfor %}
 </body>
 </html>

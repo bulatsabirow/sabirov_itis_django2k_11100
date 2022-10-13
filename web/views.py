@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import DeleteView, ListView, DetailView
 
+from oxygen import settings
 from web.forms import RegisterForm, AuthorizationForm, ProductForm
 from web.models import Product, User
 
@@ -33,11 +35,14 @@ class ProductListView(ListView):
         }
 
 
-class ProductUserListView(ProductListView):
+class ProductUserListView(ProductListView, LoginRequiredMixin):
     template_name = 'web/my.html'
+    redirect_field_name = 'authorization'
+    login_url = settings.LOGIN_URL
 
     def get_queryset(self):
-        return self.filter_queryset(Product.objects.filter(user=self.request.user))
+        print(self.request.user.id)
+        return self.filter_queryset(Product.objects.filter(user=self.request.user.id))
 
 
 # def products_page(request):

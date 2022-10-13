@@ -8,8 +8,12 @@
     <h1>Мои товары</h1>
     <hr>
     <a href="{% url 'add' %}">Добавить товар</a>
+    <a href="{% url 'products' %}">Вернуться на главную страницу</a>
     {% for product in products %}
         <p><a href="{% url 'product' product.id %}">{{ product.name }}</a></p>
+        <p>
+            <small>Цена: {{ product.price }}</small>
+        </p>
     {% endfor %}
 </body>
 </html>
