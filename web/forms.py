@@ -2,8 +2,14 @@ from datetime import date
 
 from django import forms
 
-from web.models import Product
+from web.models import Product, Category
 from web.validators import phone_validator
+
+
+class CategoryChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.category
+
 
 
 class AuthorizationForm(forms.Form):
@@ -18,6 +24,10 @@ class RegisterForm(AuthorizationForm):
 
 
 class ProductForm(forms.ModelForm):
+    category_id = CategoryChoiceField(queryset=Category.objects.all(),
+                                      to_field_name='category',
+                                      label='Категория')
+
     def save(self, *args, **kwargs):
         self.instance.user = self.initial['user']
         return super().save(*args, **kwargs)
@@ -30,6 +40,7 @@ class ProductForm(forms.ModelForm):
                   'photo': 'Изображение',
                   'price': 'Цена',
                   'count': 'Количество',
+                  'category': 'Категория',
                   }
         widgets = {
             'price': forms.NumberInput(),

@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 
-from web.views import products_page, product_view, registration_view, authorization_view, add_product_view, logout_view
+from web.views import products_page, product_view, registration_view, authorization_view, add_product_view, logout_view, \
+    ProductDeleteView
 
 urlpatterns = [
     path('products/', products_page, name='products'),
@@ -10,4 +11,5 @@ urlpatterns = [
     path('authorization/', authorization_view, name='auth'),
     path('logout/', logout_view, name='logout'),
     path('add_product/', add_product_view, name='add'),
+    path('delete_product/<int:id>', ProductDeleteView.as_view(), name='delete'),
 ]

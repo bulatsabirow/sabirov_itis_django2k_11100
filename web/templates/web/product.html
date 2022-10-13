@@ -9,9 +9,10 @@
 </head>
 <body>
     <p><a href="{% url 'products' %}">Вернуться на главную страницу</a></p>
-    {% if user.is_authenticated %}
+    {% if is_owner %}
         <p><a href="{% url 'products' %}?my_products=true">Вернуться к списку
             своих товаров</a></p>
+        <p><a href="{% url 'delete' product.id %}">Удалить товар</a></p>
     {% endif %}
     <h1>{{ product.name }}</h1>
     <p><small>ID товара: {{ product.id }}</small></p>

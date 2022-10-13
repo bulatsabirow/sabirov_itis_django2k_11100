@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import DeleteView
 
 from web.forms import RegisterForm, AuthorizationForm, ProductForm
 from web.models import Product, User
@@ -29,8 +31,12 @@ def products_page(request):
 
 def product_view(request, id):
     product = get_object_or_404(Product, id=id)
+    is_owner = False
+    if product in Product.objects.filter(user=request.user):
+        is_owner = True
     return render(request, 'web/product.html', {
         'product': product,
+        'is_owner': is_owner,
     })
 
 
@@ -66,6 +72,7 @@ def authorization_view(request):
         'message': message,
     })
 
+
 @login_required
 def add_product_view(request):
     form = ProductForm()
@@ -79,7 +86,37 @@ def add_product_view(request):
     })
 
 
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('products')
+
+
+class ProductMixin:
+    template_name = 'web/add_product.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+    context_object_name = 'product'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Product.objects.none()
+        return Product.objects.filter(user=self.request.user)
+
+    def get_initial(self):
+        return {'user': self.request.user}
+
+    def get_success_url(self):
+        return reverse('product', args=(self.object.id,))
+
+
+class ProductDeleteView(ProductMixin, DeleteView):
+    template_name = 'web/delete_product.html'
+
+    def get_success_url(self):
+        return reverse('products')
+
+    def get_context_data(self, **kwargs):
+        return {'product': Product.objects.filter(id=self.object.id)}
+
 
