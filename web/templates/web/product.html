@@ -16,12 +16,21 @@
     {% endif %}
     <h1>{{ product.name }}</h1>
     <p><small>ID товара: {{ product.id }}</small></p>
+    {% if not product.photo %}
+        <p><b>Нет фото</b></p>
+        <br>
+    {% endif %}
     {% if product.count <= 0 %}
         <p><b>Товар отсутствует в продаже</b></p>
     {% else %}
         <p>Цена: {{ product.price }}</p>
     {% endif %}
-    <p>Описание: <br><br>{{ product.description }}</p>
+    <p>Описание: <br><br>{{ product.description }}<br></p>
+    <p>Категория:
+        {% if product.category %}
+            {{ product.category|default_if_none:'Нет категории' }}
+        {% endif %}
+    </p>
     <p>
         <small>Время создания: {{ product.created_at|date:'d.m.Y' }}</small>
     </p>
